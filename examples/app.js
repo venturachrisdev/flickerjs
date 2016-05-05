@@ -1,9 +1,9 @@
-var nodejserver = require('../');
+var flicker = require('../');
 var favicon = require('serve-favicon');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compress = require('compression');
-var app = nodejserver();
+var app = flicker();
 
 var router = app.Router();
 
