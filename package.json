@@ -13,6 +13,9 @@
     "url": "https://github.com/flickerstudio/flicker.js.git"
   },
   "license": "MIT",
+  "engines":{
+    "node": ">=6.0.0"
+  },
   "dependencies": {
     "body-parser": "~1.13.2",
     "colors": "^1.1.2",
