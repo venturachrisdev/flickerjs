@@ -1,6 +1,6 @@
 {
   "name": "flickerjs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Super fast and simple web framework for node.js",
   "main": "index.js",
   "scripts": {
