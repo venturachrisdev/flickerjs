@@ -1,6 +1,6 @@
-Flicker.js [![Build Status](https://travis-ci.org/flickerstudio/flicker.js.svg?branch=master)](https://travis-ci.org/flickerstudio/flicker.js)
+Flicker.js [![Build Status](https://travis-ci.org/flickerstudio/flicker.js.svg?branch=master)](https://travis-ci.org/flickerstudio/flicker.js) [![Dependency Status](https://david-dm.org/flickerstudio/flicker.js.svg)](https://david-dm.org/flickerstudio/flicker.js)
 ====
-A Super fast and simple web framework for node.js based on Express.
+A Super fast and simple web framework for node.js (v6.0.0) based on Express.
 
 
 Install
