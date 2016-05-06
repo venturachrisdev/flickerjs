@@ -1,4 +1,4 @@
-var flicker = require('../');
+const flicker = require('../');
 var app = flicker();
 
 app.use('/', (req, res) => {

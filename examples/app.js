@@ -1,15 +1,15 @@
-var flicker = require('../');
-var favicon = require('serve-favicon');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var compress = require('compression');
+const flicker = require('../');
+const favicon = require('serve-favicon');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const compress = require('compression');
 var app = flicker();
 
 var router = app.Router();
 
 app.use(compress());
 app.use(favicon('./public/favicon.ico'));
-app.use(app.serveStatic());
+app.use(app.serveStatic('./public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());

@@ -6,5 +6,5 @@ Flicker.js web framework
 - Leonardo Perez <thelionflow2009@hotmail.com>
 */
 
-flickerjs = require('./lib/flicker');
+var flickerjs = require('./lib/flicker');
 module.exports = flickerjs;
