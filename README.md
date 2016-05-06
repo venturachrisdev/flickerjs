@@ -1,4 +1,4 @@
-Flicker.js
+Flicker.js [![Build Status](https://travis-ci.org/flickerstudio/flicker.js.svg?branch=master)](https://travis-ci.org/flickerstudio/flicker.js)
 ====
 A Super fast and simple web framework for node.js based on Express.
 
