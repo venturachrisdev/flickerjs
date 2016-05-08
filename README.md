@@ -1,6 +1,6 @@
-Flicker.js [![Build Status](https://travis-ci.org/flickerstudio/flicker.js.svg?branch=master)](https://travis-ci.org/flickerstudio/flicker.js) [![Dependency Status](https://david-dm.org/flickerstudio/flicker.js.svg)](https://david-dm.org/flickerstudio/flicker.js)
+Flicker.js [![Build Status](https://travis-ci.org/flickerstudio/flickerjs.svg?branch=master)](https://travis-ci.org/flickerstudio/flickerjs) [![Dependency Status](https://david-dm.org/flickerstudio/flickerjs.svg)](https://david-dm.org/flickerstudio/flickerjs)
 ====
-A Super fast and simple web framework for node.js (v6.0.0) based on Express.
+A Super fast and simple web framework for node.js (v6.0.0) based on connect.
 
 
 Install
@@ -29,16 +29,19 @@ Example
 ====
 ```javascript
 
-const flicker = require('flickerjs');
+cconst flicker = require('../');
 const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compress = require('compression');
-var app = flicker();
+let app = flicker();
+let fooRouter = app.Router();
+let barRouter = require('./routers/bar.js'); // external router file
 
-var router = app.Router();
+app.set('template','pug');
+app.set('static dir','./public');
+app.set('views dir','./views');
 
-//middlewares
 app.use(compress());
 app.use(favicon('./public/favicon.ico'));
 app.use(app.serveStatic('./public'));
@@ -47,42 +50,49 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
-app.use( (req,res,next) => {
-        // middleware work in each request
-        res.locals = "Mustang";
+// inherited in renders
+app.locals.year = 2016;
+
+app.use(
+    (req,res,next) => {
+        // inherited in renders
+        res.locals.author = "Flicker.js";
         next();
     }
 );
+fooRouter.get('/',
+    (req,res,next) => {
+        res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+    }
+);
 
-
-router.get('/', (req,res) => {
-    console.log(`I receive ${res.locals}`); /* -> Mustang */
-    res.template('/index.html');
-});
-
-router.get('/form', (req,res,next) => {
-    res.template('/form.html');
-    next();
-});
-
-router.post('/form',(req,res,next) => {
-    res.json(req.body);
-});
-
-
-app.use(
-    (req,res) => {
-        // if app does not found routers, call this middleware.
-        res.status(404).template("/404.html");
+fooRouter.get('/bar',
+    (req,res,next) => {
+       res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
     }
 );
 
 
+
+app.use('/foo',fooRouter);
+app.use('/bar',barRouter);
+
+app.use('/',(req,res,next) => {
+    res.render('index',{title: 'Welcome to Flicker.js'});
+});
+
+app.use('/test',(req,res,next) => {
+    res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+});
+
+app.use('/blog',(req,res,next) => {
+    res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+});
+
+
 app.use(
-    (req,res, next, err) =>{
-    // if last param is an error
-        res.status(err.status || 500);
-        res.send(err.message);
+    (req,res,next) => {
+        res.status(404).render("404",{ title: '404 - Not Found'});
     }
 );
 

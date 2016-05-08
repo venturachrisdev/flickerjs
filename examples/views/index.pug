@@ -1,0 +1,10 @@
+extends layout
+block content
+    h1 #{title}
+    if message
+        p!= message
+    else
+        p= 'Your App is running!'
+    footer
+        if author && year
+            span!= 'Powered by ' + author + ' - ' + year

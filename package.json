@@ -1,7 +1,7 @@
 {
   "name": "flickerjs",
-  "version": "0.0.4",
-  "description": "Super fast and simple web framework for node.js",
+  "version": "0.1.0",
+  "description": "A Super fast and simple web framework for node.js (v6.0.0) based on connect.",
   "main": "index.js",
   "scripts": {
     "test": "mocha --reporter spec --timeout 5000"
@@ -9,7 +9,7 @@
   "author": "Flicker Studio",
   "repository": {
     "type": "git",
-    "url": "https://github.com/flickerstudio/flicker.js.git"
+    "url": "https://github.com/flickerstudio/flickerjs.git"
   },
   "license": "MIT",
   "engines": {
@@ -19,7 +19,9 @@
     "body-parser": "~1.15.0",
     "colors": "^1.1.2",
     "compression": "^1.6.1",
-    "cookie-parser": "~1.4.1"
+    "consolidate": "^0.14.1",
+    "cookie-parser": "~1.4.1",
+    "pug": "^2.0.0-alpha6"
   },
   "devDependencies": {
     "chai": "^3.5.0",
