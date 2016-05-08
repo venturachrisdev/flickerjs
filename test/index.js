@@ -22,6 +22,7 @@ describe('App',
                 or "200 GET /url" */
                 app.use((req,res,next) => {
                     app.set('foo','bar');
+                    next();
                 });
 
                 app.use((req,res,next) => {
@@ -107,8 +108,24 @@ describe('Router statusCode',
     }
 );
 
-describe('Routing all HTTP verbs',
+describe('Routing HTTP verbs',
     () => {
+        it('middleares responses all verbs',
+            (done) => {
+                let app = flicker();
+                app.noLog();
+                app.use(
+                    (req,res,next) => {
+                        res.send("Flicker");
+                    }
+                );
+                request(app)
+                .patch('/')
+                .expect(200,"Flicker",done);
+
+            }
+        );
+
         it('GET',
             (done) => {
                 let app = flicker();

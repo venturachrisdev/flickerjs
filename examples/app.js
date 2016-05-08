@@ -29,12 +29,13 @@ app.use(
         next();
     }
 );
+
+
 fooRouter.get('/',
     (req,res,next) => {
         res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
     }
 );
-
 fooRouter.get('/bar',
     (req,res,next) => {
        res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
@@ -42,7 +43,7 @@ fooRouter.get('/bar',
 );
 
 
-
+fooRouter.use('/bar2',barRouter);
 app.use('/foo',fooRouter);
 app.use('/bar',barRouter);
 
@@ -58,12 +59,15 @@ app.use('/blog',(req,res,next) => {
     res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
 });
 
-
 app.use(
     (req,res,next) => {
-        console.log('Llegue hasta aqui!');
         res.status(404).render("404",{ title: '404 - Not Found'});
     }
 );
 
+app.use(
+    (req,res,next,err) => {
+        res.status(500).render("error",{ title: 'Error', error: err});
+    }
+);
 app.listen(3000);

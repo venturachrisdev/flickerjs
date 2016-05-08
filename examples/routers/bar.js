@@ -2,9 +2,9 @@ const flicker = require('../../');
 
 var router = flicker().Router();
 
-router.get('/',
+router.get('/foo',
     (req,res,next) => {
-        next();
+       res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
     }
 );
 
@@ -20,9 +20,9 @@ router.get('/foo',
     }
 );
 */
-router.get(
+router.get('/',
     (req,res,next) => {
-       res.send("Boo");
+       res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
     }
 );
 

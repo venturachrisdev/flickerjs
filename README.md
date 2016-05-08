@@ -1,6 +1,6 @@
 Flicker.js [![Build Status](https://travis-ci.org/flickerstudio/flickerjs.svg?branch=master)](https://travis-ci.org/flickerstudio/flickerjs) [![Dependency Status](https://david-dm.org/flickerstudio/flickerjs.svg)](https://david-dm.org/flickerstudio/flickerjs)
 ====
-A Super fast and simple web framework for node.js (v6.0.0) based on connect.
+A Super fast and simple web framework for node.js (v6.0.0 ES6) based on connect.
 
 
 Install
@@ -100,3 +100,116 @@ app.listen(3000);
 
 
 ```
+
+Examples
+====
+To view examples clone the repo and run the example you want [app.js, next.js, basic.js]:
+```
+$ git clone https://github.com/flickerstudio/flickerjs.git
+$ cd flickerjs
+$ npm install
+$ node /examples/app.js
+
+```
+
+Tests
+====
+To run tests:
+```
+$ npm install
+$ npm test
+```
+
+
+Docs
+====
+
+After you install the module, require it:
+```javascript
+const flicker = require('fickerjs');
+```
+initialize your app:
+```javascript
+let app = flicker();
+```
+
+If you want, change the default configs:
+```javascript
+app.set('template','pug'); /* view engine */
+app.set('static dir','./public'); /* static content directory (.css, .js, .json...)*/
+app.set('views dir','./views'); /* views directory ( .pug, .haml, .html) */
+app.locals.foo = 'bar'; /* app.locals is an object that you can use (and call) it everywhere (middlewares, routers, renders...)*/
+```
+Now, you can add the middlewares you want
+```javascript
+app.use(compress()); /* data compress*/
+app.use(favicon('./public/favicon.ico')); /* serve favicon and cache it*/
+app.use(app.serveStatic('./public')); /* serve static content */
+app.use(bodyParser.json()); /* data parser to req.body */
+app.use(bodyParser.urlencoded({ extended: true })); /* same above */
+app.use(cookieParser()); /* cookies parser to req.cookies */
+```
+you can set routers for a path (or all) through the use method.
+req: Request.
+res: Response.
+next: Next middleware to call.
+
+```javascript
+app.use(
+    (req,res,next) => {
+        res.render("index",{ title: 'My Title Page'});
+    }
+);
+```
+##Response
+instance of http.ServerResponse.
+```javascript
+res.send('foo'); /* => send 'foo' */
+res.status(404); // response status is 404
+res.status(404).send('Not Found'); /* => send error 404 and 'Not Found' */
+res.sendStatus(404); /* => same above */
+res.json({'foo': 'bar'}) /* => send '{'foo':'bar'}'*/
+res.sendFile('/test.json') /* => send the content of file /public/test.json (or your static dir)*/
+res.render('index',{foo: 'bar',bar: 'foo'}) /* => send the view index.pug (default, or your views engine)*/
+res.redirect('/foo') /* => redirect users to /foo */
+res.locals /* => is similar to app.locals but only lives in current request (you can refresh it inn each request through middlewares) */
+```
+
+##Router
+Its a handler for your paths. You can to nest routers on the app.
+```javascript
+let router = app.Router();
+
+router.get('/path',(req,res,next) => { /* anything */});
+router.post('/path',(req,res,next) => { /* anything */});
+router.put('/path',(req,res,next) => { /* anything */});
+router.delete('/path',(req,res,next) => { /* anything */});
+router.put('/path',(req,res,next) => { /* anything */});
+
+/* incorpore to your app */
+app.use('/foo',router);
+```
+
+License
+====
+
+Christopher Ventura <chrisventjs@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+'Software'), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
