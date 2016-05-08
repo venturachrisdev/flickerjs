@@ -478,6 +478,21 @@ describe('Request Object',
                 .put('/pretty')
                 .expect(200,'PUT',done);
         });
+
+        it('Params',
+            (done) => {
+                let app = flicker();
+                app.noLog();
+                let router = app.Router();
+                router.get('/user/:id', (req,res,next) => {
+                    res.send(req.params.id);
+                });
+                app.use(router);
+                request(app)
+                .get('/user/5')
+                .expect(200,'5',done);
+            }
+        );
     }
 );
 

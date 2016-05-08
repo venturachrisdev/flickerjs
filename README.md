@@ -89,6 +89,10 @@ app.use('/blog',(req,res,next) => {
     res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
 });
 
+app.use('/user/:id', (req,res,next) => {
+    res.json(req.params.id);
+});
+
 
 app.use(
     (req,res,next) => {

@@ -42,6 +42,9 @@ fooRouter.get('/bar',
     }
 );
 
+barRouter.get('/user/:id', (req,res,next) => {
+    res.send(req.params.id);
+});
 
 fooRouter.use('/bar2',barRouter);
 app.use('/foo',fooRouter);
@@ -58,6 +61,12 @@ app.use('/test',(req,res,next) => {
 app.use('/blog',(req,res,next) => {
     res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
 });
+
+app.use('/user/:id', (req,res,next) => {
+    res.send(req.params.id);
+});
+
+
 
 app.use(
     (req,res,next) => {
