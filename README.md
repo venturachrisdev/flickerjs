@@ -189,6 +189,7 @@ router.post('/path',(req,res,next) => { /* anything */});
 router.put('/path',(req,res,next) => { /* anything */});
 router.delete('/path',(req,res,next) => { /* anything */});
 router.put('/path',(req,res,next) => { /* anything */});
+router.use('/user/:id', (req,res,next) => { /* req.params.id */});
 
 /* incorpore to your app */
 app.use('/foo',router);
