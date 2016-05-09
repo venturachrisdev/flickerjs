@@ -74,7 +74,7 @@ app.use('/', (req,res,next) => {
 });
 
 app.use((req,res,next) => {
-    res.json({}); // if error, return a empty json
+    res.json({}); // return a empty json
 });
 
 app.listen(3000); /* listen */

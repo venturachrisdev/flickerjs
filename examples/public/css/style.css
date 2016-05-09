@@ -9,7 +9,7 @@
 }
 h1 {
     padding: 50px 50px 0;
-    font-size: 3em;
+    font-size: 2.3rem;
 }
 
 p {
@@ -23,4 +23,13 @@ footer {
 span {
     font-size: 0.9rem;
     color: #818181;
+}
+pre {
+    padding: 10px 60px;
+    font-size: 1rem;
+    color: #7B7B7B;
+}
+
+h2{
+    padding-left: 60px;
 }

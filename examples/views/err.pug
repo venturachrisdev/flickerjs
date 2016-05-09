@@ -1,5 +1,5 @@
 extends layout
 block content
-    h1= 'Internal Error.'
+    h1= error.message
     h2!= error.status
     pre!= error.stack

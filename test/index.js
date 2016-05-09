@@ -493,6 +493,19 @@ describe('Request Object',
                 .expect(200,'5',done);
             }
         );
+
+        it('Query',
+            (done) => {
+                let app = flicker();
+                app.noLog();
+                app.use((req,res,next) => {
+                    res.send(req.query());
+                });
+                request(app)
+                .get('/?foo=bar')
+                .expect(200,'foo=bar',done);
+            }
+        );
     }
 );
 

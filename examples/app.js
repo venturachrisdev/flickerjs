@@ -10,7 +10,7 @@ let barRouter = require('./routers/bar.js'); // external router file
 app.set('template','pug');
 app.set('static dir','./public');
 app.set('views dir','./views');
-
+//app.set('env','production');
 app.use(compress());
 app.use(favicon('./public/favicon.ico'));
 app.use(app.serveStatic('./public'));
@@ -70,13 +70,25 @@ app.use('/user/:id', (req,res,next) => {
 
 app.use(
     (req,res,next) => {
-        res.status(404).render("404",{ title: '404 - Not Found'});
+        var err = new Error('Not Found');
+        err.status = 404;
+        next(err);
     }
 );
 
+if(app.get('env') == 'production'){
 app.use(
     (req,res,next,err) => {
-        res.status(500).render("error",{ title: 'Error', error: err});
+        err.stack = "";
+        res.status(err.status || 500).render("err",{ title: 'Error', error: err});
     }
 );
+}
+else{
+app.use(
+    (req,res,next,err) => {
+        res.status(err.status || 500).render("err",{ title: 'Error', error: err});
+    }
+);
+}
 app.listen(3000);
