@@ -76,19 +76,12 @@ app.use(
     }
 );
 
-if(app.get('env') == 'production'){
 app.use(
-    (req,res,next,err) => {
+    if(app.get('env') == 'production'){
         err.stack = "";
-        res.status(err.status || 500).render("err",{ title: 'Error', error: err});
     }
-);
-}
-else{
-app.use(
     (req,res,next,err) => {
         res.status(err.status || 500).render("err",{ title: 'Error', error: err});
     }
 );
-}
 app.listen(3000);

@@ -9,7 +9,21 @@ Install
 $ npm install flickerjs
 ```
 
-Quick Use
+Usage
+====
+via [flicker-easy](https://www.npmjs.com/package/flicker-easy) package:
+Usage: flickerjs <appname> [dir]. (also 'flicker' command)
+
+```
+$ flickerjs todolist
+```
+Or
+```
+$ flicker todolist /mydir
+```
+
+
+Basic
 ===
 ```javascript
 const flicker = require('flickerjs');
