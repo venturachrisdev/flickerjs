@@ -4,9 +4,9 @@ const compress = require('compression');
 
 let app = flicker();
 
-app.use(compress());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(compress())
+    .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended: true }));
 
 let api = app.Router();
 
@@ -33,48 +33,43 @@ app.locals.todos = [
 
 api.get('/todos', (req,res,next) => { /* return todos */
     res.json(app.locals.todos);
-});
-api.get('/todos/:todo', (req,res,next) => { /*  return todo */
-    if(req.params.todo >= app.locals.todos.length){
-        next();
-    }
-    else{
-        res.json(app.locals.todos[req.params.todo]);
-    }
-});
-api.post('/todos', (req,res,next) => { /*  insert todo */
-    app.locals.todos.push(req.body.todo);
-    res.json(app.locals.todos)
-});
-
-api.delete('/todos/:todo', (req,res,next) => { /*  delete todo */
-    if(req.params.todo >= app.locals.todos.length){
-        next();
-    }
-    else{
-        app.locals.todos.splice(req.params.todo,1);
-        res.json(app.locals.todos);
-    }
-});
-
-api.put('/todos/:todo', (req,res,next) => { /*  edit todo */
-    if(req.params.todo >= app.locals.todos.length){
-        next();
-    }
-    else{
-        app.locals.todos[req.params.todo] = req.body.todo;
+})
+    .get('/todos/:todo', (req,res,next) => { /*  return todo */
+        if(req.params.todo >= app.locals.todos.length){
+            next();
+        }
+        else{
+            res.json(app.locals.todos[req.params.todo]);
+        }
+    })
+    .post('/todos', (req,res,next) => { /*  insert todo */
+        app.locals.todos.push(req.body.todo);
         res.json(app.locals.todos)
-    }
-});
+    })
+    .delete('/todos/:todo', (req,res,next) => { /*  delete todo */
+        if(req.params.todo >= app.locals.todos.length){
+            next();
+        }
+        else{
+            app.locals.todos.splice(req.params.todo,1);
+            res.json(app.locals.todos);
+        }
+    })
+    .put('/todos/:todo', (req,res,next) => { /*  edit todo */
+        if(req.params.todo >= app.locals.todos.length){
+            next();
+        }
+        else{
+            app.locals.todos[req.params.todo] = req.body.todo;
+            res.json(app.locals.todos)
+        }
+    })
 
-app.use('/api',api); // include the router
-
-app.use('/', (req,res,next) => {
-    res.redirect("/api/todos");
-});
-
-app.use((req,res,next) => {
-    res.json({}); // return a empty json
-});
-
-app.listen(3000); /* listen */
+app.use('/api',api) // include the router
+    .use('/', (req,res,next) => {
+        res.redirect("/api/todos");
+    })
+    .use((req,res,next) => {
+        res.json({}); // return a empty json
+    })
+    .listen(3000); /* listen */

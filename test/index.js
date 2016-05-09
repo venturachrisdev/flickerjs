@@ -18,14 +18,13 @@ describe('App',
         it('get and set',
             (done) => {
                 let app = flicker();
-                app.noLog(); /* do not console log => "Server running on port ..."
+                app.noLog() /* do not console log => "Server running on port ..."
                 or "200 GET /url" */
-                app.use((req,res,next) => {
+                .use((req,res,next) => {
                     app.set('foo','bar');
                     next();
-                });
-
-                app.use((req,res,next) => {
+                })
+                .use((req,res,next) => {
                     res.send(app.get('foo'));
                 });
                 request(app)
@@ -35,15 +34,14 @@ describe('App',
         );
         it('locals should be inherited',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 app.locals = { blog_title: 'Lorem Ipsum'};
                 app.use((req,res,next) => {
                     app.locals.description =  'Lorem Ipsum dolor sit amet';
                     next();
-                });
-
-                app.use('/pretty',
+                })
+                .use('/pretty',
                     (req,res,next) => {
                         res.send(app.locals.blog_title);
                     }
@@ -60,9 +58,9 @@ describe('Router statusCode',
     () => {
         it('should be 200',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use((req,res,next) => {
+                let app = flicker()
+                .noLog()
+                .use((req,res,next) => {
                     res.sendStatus(200);
                 });
                 request(app)
@@ -72,8 +70,8 @@ describe('Router statusCode',
         });
         it('should be 404',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 request(app)
                 .get('/')
                 .expect(404,done);
@@ -81,9 +79,9 @@ describe('Router statusCode',
         });
         it('should be 201',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use(
+                let app = flicker()
+                .noLog()
+                .use(
                     (req,res) => {
                         res.status(201).end();
                     }
@@ -95,9 +93,9 @@ describe('Router statusCode',
         );
         it('should be 500',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use((req,res) => {
+                let app = flicker()
+                .noLog()
+                .use((req,res) => {
                     res.status(500).end();
                 });
                 request(app)
@@ -112,9 +110,9 @@ describe('Routing HTTP verbs',
     () => {
         it('middleares responses all verbs',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use(
+                let app = flicker()
+                .noLog()
+                .use(
                     (req,res,next) => {
                         res.send("Flicker");
                     }
@@ -128,14 +126,15 @@ describe('Routing HTTP verbs',
 
         it('GET',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 let router = app.Router();
                 router.get('/app',
                     (req,res,next) => {
                         res.send("Flicker");
                     }
                 );
+
                 app.use(router);
                 request(app)
                 .get('/app')
@@ -200,8 +199,8 @@ describe('Routing HTTP verbs',
 
         it('PATCH',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 let router = app.Router();
                 router.patch('/app',
                     (req,res,next) => {
@@ -219,8 +218,8 @@ describe('Routing HTTP verbs',
 
         it('GET do not reponses for POST method',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 let router = app.Router();
                 router.get('/pretty',
                     (req,res,next) => {
@@ -236,8 +235,8 @@ describe('Routing HTTP verbs',
 
         it('PUT do not reponses for DELETE method',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 let router = app.Router();
                 router.put('/pretty',
                     (req,res,next) => {
@@ -257,9 +256,9 @@ describe('Response Object',
     () => {
         it('end()',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use(
+                let app = flicker()
+                .noLog()
+                .use(
                     (req,res) => {
                         res.end("foo");
                     }
@@ -272,9 +271,9 @@ describe('Response Object',
         );
         it('send()',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use(
+                let app = flicker()
+                .noLog()
+                .use(
                     (req,res) => {
                         res.send("bar");
                     }
@@ -288,9 +287,9 @@ describe('Response Object',
 
         it('status()',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use(
+                let app = flicker()
+                .noLog()
+                .use(
                     (req,res) => {
                         res.status(500).end("bar");
                     }
@@ -304,9 +303,9 @@ describe('Response Object',
 
         it('preventStatus() do not override the current statusCode',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use(
+                let app = flicker()
+                .noLog()
+                .use(
                     (req,res) => {
                         res.status(200).preventStatus(404).end();
                     }
@@ -319,9 +318,9 @@ describe('Response Object',
         );
         it('json()',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use(
+                let app = flicker()
+                .noLog()
+                .use(
                     (req,res) => {
                         res.json({ foo: 'bar' } );
                     }
@@ -335,9 +334,9 @@ describe('Response Object',
 
         it('sendFile()',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use('/pretty',
+                let app = flicker()
+                .noLog()
+                .use('/pretty',
                     (req,res,next) => {
                         res.sendFile('examples/public/test.json');
                     }
@@ -350,9 +349,9 @@ describe('Response Object',
 
         it('render()',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use('/pretty',
+                let app = flicker()
+                .noLog()
+                .use('/pretty',
                     (req,res,next) => {
                         res.render('./test/views/index',{});
                     }
@@ -364,9 +363,9 @@ describe('Response Object',
         );
         it('redirect()',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use('/pretty',
+                let app = flicker()
+                .noLog()
+                .use('/pretty',
                     (req,res,next) => {
                         res.redirect('http://google.com/');
                     }
@@ -378,14 +377,13 @@ describe('Response Object',
         );
         it('locals should be inherited',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use((req,res,next) => {
+                let app = flicker()
+                .noLog()
+                .use((req,res,next) => {
                     res.locals = { user: 'me' };
                     next();
-                });
-
-                app.use('/pretty',(req,res,next) => {
+                })
+                .use('/pretty',(req,res,next) => {
                     res.send(res.locals.user);
                 });
                 request(app)
@@ -399,8 +397,8 @@ describe('Request Object',
     () => {
         it('body should be inherited',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 let router = app.Router();
                 app.use(bodyParser.json());
                 router.post('/pretty',(req,res,next) => {
@@ -417,11 +415,11 @@ describe('Request Object',
 
         it('cookies should be inherited',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 let router = app.Router();
-                app.use(cookieParser());
-                app.use((req,res,next) => {
+                app.use(cookieParser())
+                .use((req,res,next) => {
                     req.cookies = {'foo':'bar'};
                     next();
                 });
@@ -436,8 +434,8 @@ describe('Request Object',
 
         it('Url',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 let router = app.Router();
                 app.use(cookieParser());
                 router.get('/pretty',(req,res,next) => {
@@ -451,8 +449,8 @@ describe('Request Object',
 
         it('Path',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 let router = app.Router();
                 app.use(cookieParser());
                 router.get('/pretty',(req,res,next) => {
@@ -466,8 +464,8 @@ describe('Request Object',
 
         it('Method',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 let router = app.Router();
                 app.use(cookieParser());
                 router.put('/pretty',(req,res,next) => {
@@ -481,8 +479,8 @@ describe('Request Object',
 
         it('Params',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 let router = app.Router();
                 router.get('/user/:id', (req,res,next) => {
                     res.send(req.params.id);
@@ -496,9 +494,9 @@ describe('Request Object',
 
         it('Query',
             (done) => {
-                let app = flicker();
-                app.noLog();
-                app.use((req,res,next) => {
+                let app = flicker()
+                .noLog()
+                .use((req,res,next) => {
                     res.send(req.query());
                 });
                 request(app)
@@ -513,8 +511,8 @@ describe('Serving Static content',
     () => {
         it('OK /favicon.ico',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 app.use(app.serveStatic('examples/public'));
                 request(app)
                 .get('/favicon.ico')
@@ -524,8 +522,8 @@ describe('Serving Static content',
 
         it('OK /css/style.css',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 app.use(app.serveStatic('examples/public'));
                 request(app)
                 .get('/css/style.css')
@@ -535,8 +533,8 @@ describe('Serving Static content',
 
         it('OK /js/index.js',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 app.use(app.serveStatic('examples/public'));
                 request(app)
                 .get('/js/index.js')
@@ -546,8 +544,8 @@ describe('Serving Static content',
 
         it('OK /test.json',
             (done) => {
-                let app = flicker();
-                app.noLog();
+                let app = flicker()
+                .noLog();
                 app.use(app.serveStatic('examples/public'));
                 request(app)
                 .get('/test.json')

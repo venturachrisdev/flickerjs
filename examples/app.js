@@ -7,16 +7,16 @@ let app = flicker();
 let fooRouter = app.Router();
 let barRouter = require('./routers/bar.js'); // external router file
 
-app.set('template','pug');
-app.set('static dir','./public');
-app.set('views dir','./views');
+app.set('template','pug')
+    .set('static dir','./public')
+    .set('views dir','./views')
 //app.set('env','production');
-app.use(compress());
-app.use(favicon('./public/favicon.ico'));
-app.use(app.serveStatic('./public'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+    .use(compress())
+    .use(favicon('./public/favicon.ico'))
+    .use(app.serveStatic('./public'))
+    .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended: true }))
+    .use(cookieParser());
 
 
 // inherited in renders
@@ -35,53 +35,53 @@ fooRouter.get('/',
     (req,res,next) => {
         res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
     }
-);
-fooRouter.get('/bar',
-    (req,res,next) => {
-       res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
-    }
-);
+)
+    .get('/bar',
+        (req,res,next) => {
+           res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+        }
+    );
 
 barRouter.get('/user/:id', (req,res,next) => {
     res.send(req.params.id);
 });
 
 fooRouter.use('/bar2',barRouter);
-app.use('/foo',fooRouter);
-app.use('/bar',barRouter);
+app.use('/foo',fooRouter)
+    .use('/bar',barRouter)
 
-app.use('/',(req,res,next) => {
-    res.render('index',{title: 'Welcome to Flicker.js'});
-});
+    .use('/',(req,res,next) => {
+        res.render('index',{title: 'Welcome to Flicker.js'});
+    })
 
-app.use('/test',(req,res,next) => {
-    res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
-});
+    .use('/test',(req,res,next) => {
+        res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+    })
 
-app.use('/blog',(req,res,next) => {
-    res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
-});
+    .use('/blog',(req,res,next) => {
+        res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+    })
 
-app.use('/user/:id', (req,res,next) => {
-    res.send(req.params.id);
-});
+    .use('/user/:id', (req,res,next) => {
+        res.send(req.params.id);
+    })
 
 
 
-app.use(
-    (req,res,next) => {
-        var err = new Error('Not Found');
-        err.status = 404;
-        next(err);
-    }
-);
+    .use(
+        (req,res,next) => {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        }
+    )
 
-app.use(
-    if(app.get('env') == 'production'){
-        err.stack = "";
-    }
-    (req,res,next,err) => {
-        res.status(err.status || 500).render("err",{ title: 'Error', error: err});
-    }
-);
-app.listen(3000);
+    .use(
+        (req,res,next,err) => {
+            if(app.get('env') == 'production'){
+                err.stack = "";
+            }
+            res.status(err.status || 500).render("err",{ title: 'Error', error: err});
+        }
+    )
+    .listen(3000);

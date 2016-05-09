@@ -28,12 +28,10 @@ Basic
 ```javascript
 const flicker = require('flickerjs');
 var app = flicker();
-
 app.use('/', (req, res) => {
     res.send('Hello Flicker.js');
-});
-
-app.listen(3000);
+})
+    .listen(3000);
 
 ```
 
@@ -50,9 +48,9 @@ const compress = require('compression');
 
 let app = flicker();
 
-app.use(compress());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(compress())
+    .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended: true }));
 
 let api = app.Router();
 
@@ -79,51 +77,46 @@ app.locals.todos = [
 
 api.get('/todos', (req,res,next) => { /* return todos */
     res.json(app.locals.todos);
-});
-api.get('/todos/:todo', (req,res,next) => { /*  return todo */
-    if(req.params.todo >= app.locals.todos.length){
-        next();
-    }
-    else{
-        res.json(app.locals.todos[req.params.todo]);
-    }
-});
-api.post('/todos', (req,res,next) => { /*  insert todo */
-    app.locals.todos.push(req.body.todo);
-    res.json(app.locals.todos)
-});
-
-api.delete('/todos/:todo', (req,res,next) => { /*  delete todo */
-    if(req.params.todo >= app.locals.todos.length){
-        next();
-    }
-    else{
-        app.locals.todos.splice(req.params.todo,1);
-        res.json(app.locals.todos);
-    }
-});
-
-api.put('/todos/:todo', (req,res,next) => { /*  edit todo */
-    if(req.params.todo >= app.locals.todos.length){
-        next();
-    }
-    else{
-        app.locals.todos[req.params.todo] = req.body.todo;
+})
+    .get('/todos/:todo', (req,res,next) => { /*  return todo */
+        if(req.params.todo >= app.locals.todos.length){
+            next();
+        }
+        else{
+            res.json(app.locals.todos[req.params.todo]);
+        }
+    })
+    .post('/todos', (req,res,next) => { /*  insert todo */
+        app.locals.todos.push(req.body.todo);
         res.json(app.locals.todos)
-    }
-});
+    })
+    .delete('/todos/:todo', (req,res,next) => { /*  delete todo */
+        if(req.params.todo >= app.locals.todos.length){
+            next();
+        }
+        else{
+            app.locals.todos.splice(req.params.todo,1);
+            res.json(app.locals.todos);
+        }
+    })
+    .put('/todos/:todo', (req,res,next) => { /*  edit todo */
+        if(req.params.todo >= app.locals.todos.length){
+            next();
+        }
+        else{
+            app.locals.todos[req.params.todo] = req.body.todo;
+            res.json(app.locals.todos)
+        }
+    })
 
-app.use('/api',api); // include the router
-
-app.use('/', (req,res,next) => {
-    res.redirect("/api/todos");
-});
-
-app.use((req,res,next) => {
-    res.json({}); // if error, return a empty json
-});
-
-app.listen(3000); /* listen */
+app.use('/api',api) // include the router
+    .use('/', (req,res,next) => {
+        res.redirect("/api/todos");
+    })
+    .use((req,res,next) => {
+        res.json({}); // return a empty json
+    })
+    .listen(3000); /* listen */
 
 
 ```
@@ -133,7 +126,7 @@ Example
 ====
 ```javascript
 
-cconst flicker = require('../');
+const flicker = require('flickerjs');
 const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -142,16 +135,16 @@ let app = flicker();
 let fooRouter = app.Router();
 let barRouter = require('./routers/bar.js'); // external router file
 
-app.set('template','pug');
-app.set('static dir','./public');
-app.set('views dir','./views');
-
-app.use(compress());
-app.use(favicon('./public/favicon.ico'));
-app.use(app.serveStatic('./public'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.set('template','pug')
+    .set('static dir','./public')
+    .set('views dir','./views')
+//app.set('env','production');
+    .use(compress())
+    .use(favicon('./public/favicon.ico'))
+    .use(app.serveStatic('./public'))
+    .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended: true }))
+    .use(cookieParser());
 
 
 // inherited in renders
@@ -164,47 +157,63 @@ app.use(
         next();
     }
 );
+
+
 fooRouter.get('/',
     (req,res,next) => {
         res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
     }
-);
+)
+    .get('/bar',
+        (req,res,next) => {
+           res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+        }
+    );
 
-fooRouter.get('/bar',
-    (req,res,next) => {
-       res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
-    }
-);
-
-
-
-app.use('/foo',fooRouter);
-app.use('/bar',barRouter);
-
-app.use('/',(req,res,next) => {
-    res.render('index',{title: 'Welcome to Flicker.js'});
+barRouter.get('/user/:id', (req,res,next) => {
+    res.send(req.params.id);
 });
 
-app.use('/test',(req,res,next) => {
-    res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
-});
+fooRouter.use('/bar2',barRouter);
+app.use('/foo',fooRouter)
+    .use('/bar',barRouter)
 
-app.use('/blog',(req,res,next) => {
-    res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
-});
+    .use('/',(req,res,next) => {
+        res.render('index',{title: 'Welcome to Flicker.js'});
+    })
 
-app.use('/user/:id', (req,res,next) => {
-    res.json(req.params.id);
-});
+    .use('/test',(req,res,next) => {
+        res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+    })
+
+    .use('/blog',(req,res,next) => {
+        res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+    })
+
+    .use('/user/:id', (req,res,next) => {
+        res.send(req.params.id);
+    })
 
 
-app.use(
-    (req,res,next) => {
-        res.status(404).render("404",{ title: '404 - Not Found'});
-    }
-);
 
-app.listen(3000);
+    .use(
+        (req,res,next) => {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        }
+    )
+
+    .use(
+        (req,res,next,err) => {
+            if(app.get('env') == 'production'){
+                err.stack = "";
+            }
+            res.status(err.status || 500).render("err",{ title: 'Error', error: err});
+        }
+    )
+    .listen(3000);
+
 
 
 ```
@@ -242,24 +251,24 @@ let app = flicker();
 
 If you want, change the default configs:
 ```javascript
-app.set('template','pug'); /* view engine */
-app.set('static dir','./public'); /* static content directory (.css, .js, .json...)*/
-app.set('views dir','./views'); /* views directory ( .pug, .haml, .html) */
+app.set('template','pug') /* view engine */
+    .set('static dir','./public') /* static content directory (.css, .js, .json...)*/
+    .set('views dir','./views'); /* views directory ( .pug, .haml, .html) */
 app.locals.foo = 'bar'; /* app.locals is an object that you can use (and call) it everywhere (middlewares, routers, renders...)*/
 ```
 Now, you can add the middlewares you want
 ```javascript
-app.use(compress()); /* data compress*/
-app.use(favicon('./public/favicon.ico')); /* serve favicon and cache it*/
-app.use(app.serveStatic('./public')); /* serve static content */
-app.use(bodyParser.json()); /* data parser to req.body */
-app.use(bodyParser.urlencoded({ extended: true })); /* same above */
-app.use(cookieParser()); /* cookies parser to req.cookies */
+app.use(compress()) /* data compress*/
+.use(favicon('./public/favicon.ico')) /* serve favicon and cache it*/
+.use(app.serveStatic('./public')) /* serve static content */
+.use(bodyParser.json()) /* data parser to req.body */
+.use(bodyParser.urlencoded({ extended: true })) /* same above */
+.use(cookieParser()) /* cookies parser to req.cookies */
 ```
 you can set routers for a path (or all) through the use method.
-req: Request.
-res: Response.
-next: Next middleware to call.
+'req': Request,
+'res': Response,
+'next': Next middleware to call.
 
 ```javascript
 app.use(
@@ -287,12 +296,12 @@ Its a handler for your paths. You can to nest routers on the app.
 ```javascript
 let router = app.Router();
 
-router.get('/path',(req,res,next) => { /* anything */});
-router.post('/path',(req,res,next) => { /* anything */});
-router.put('/path',(req,res,next) => { /* anything */});
-router.delete('/path',(req,res,next) => { /* anything */});
-router.put('/path',(req,res,next) => { /* anything */});
-router.use('/user/:id', (req,res,next) => { /* req.params.id */});
+router.get('/path',(req,res,next) => { /* anything */})
+    .post('/path',(req,res,next) => { /* anything */})
+    .put('/path',(req,res,next) => { /* anything */})
+    .delete('/path',(req,res,next) => { /* anything */})
+    .put('/path',(req,res,next) => { /* anything */})
+    .use('/user/:id', (req,res,next) => { /* req.params.id */});
 
 /* incorpore to your app */
 app.use('/foo',router);
