@@ -15,6 +15,22 @@
   "engines": {
     "node": ">=6.0.0"
   },
+  "keywords": [
+    "flicker",
+    "flickerjs",
+    "server",
+    "framework",
+    "http",
+    "web",
+    "rest",
+    "node",
+    "router",
+    "middleware",
+    "fast",
+    "js",
+    "nodejs",
+    "api"
+  ],
   "dependencies": {
     "body-parser": "^1.15.0",
     "colors": "^1.1.2",
