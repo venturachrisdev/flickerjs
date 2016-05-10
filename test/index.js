@@ -106,6 +106,26 @@ describe('Router statusCode',
     }
 );
 
+describe('Router delegation',
+    () => {
+        it('include router',
+            (done) => {
+                let app = flicker()
+                .noLog();
+                let router = app.Router()
+                .to({ url: '/blog', method: 'GET'},
+                    (req,res,next) => {
+                        res.send('im /blog');
+                    });
+                app.to({ url: "/"}, router);
+                request(app)
+                .get('/blog')
+                .expect(200,done);
+            }
+        );
+    }
+);
+
 describe('Routing HTTP verbs',
     () => {
         it('middleares responses all verbs',
