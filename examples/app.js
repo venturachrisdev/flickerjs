@@ -10,9 +10,9 @@ let barRouter = require('./routers/bar.js'); // external router file
 app.set('template','pug')
     .set('static dir','./public')
     .set('views dir','./views')
-//app.set('env','production');
+//  .set('env','production');
     .use(compress())
-    .use(favicon('./public/favicon.ico'))
+//  .use(favicon('./public/favicon.ico'))
     .use(app.serveStatic('./public'))
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: true }))
