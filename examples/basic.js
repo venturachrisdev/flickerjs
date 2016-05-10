@@ -8,7 +8,7 @@ app.locals.year = 2016;
 app.to({ url: '/' },
     (req,res,next) => {
         res.locals.author = "Flicker.js";
-        res.render('index',{title: 'Welcome to Flicker.js'});
+        res.repnder('index',{title: 'Welcome to Flicker.js'});
     }
 )
 
