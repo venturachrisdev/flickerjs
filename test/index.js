@@ -20,11 +20,11 @@ describe('App',
                 let app = flicker();
                 app.noLog() /* do not console log => "Server running on port ..."
                 or "200 GET /url" */
-                .use((req,res,next) => {
+                .to((req,res,next) => {
                     app.set('foo','bar');
                     next();
                 })
-                .use((req,res,next) => {
+                .to((req,res,next) => {
                     res.send(app.get('foo'));
                 });
                 request(app)
@@ -37,11 +37,11 @@ describe('App',
                 let app = flicker()
                 .noLog();
                 app.locals = { blog_title: 'Lorem Ipsum'};
-                app.use((req,res,next) => {
+                app.to((req,res,next) => {
                     app.locals.description =  'Lorem Ipsum dolor sit amet';
                     next();
                 })
-                .use('/pretty',
+                .to('/pretty',
                     (req,res,next) => {
                         res.send(app.locals.blog_title);
                     }
@@ -60,7 +60,7 @@ describe('Router statusCode',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use((req,res,next) => {
+                .to((req,res,next) => {
                     res.sendStatus(200);
                 });
                 request(app)
@@ -81,7 +81,7 @@ describe('Router statusCode',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use(
+                .to(
                     (req,res) => {
                         res.status(201).end();
                     }
@@ -95,7 +95,7 @@ describe('Router statusCode',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use((req,res) => {
+                .to((req,res) => {
                     res.status(500).end();
                 });
                 request(app)
@@ -112,7 +112,7 @@ describe('Routing HTTP verbs',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use(
+                .to(
                     (req,res,next) => {
                         res.send("Flicker");
                     }
@@ -129,13 +129,13 @@ describe('Routing HTTP verbs',
                 let app = flicker()
                 .noLog();
                 let router = app.Router();
-                router.get('/app',
+                router.to({ url: '/app', method: 'GET'},
                     (req,res,next) => {
                         res.send("Flicker");
                     }
                 );
 
-                app.use(router);
+                app.to(router);
                 request(app)
                 .get('/app')
                 .expect(200,"Flicker",done);
@@ -148,12 +148,12 @@ describe('Routing HTTP verbs',
                 let app = flicker();
                 app.noLog();
                 let router = app.Router();
-                router.post('/app',
+                router.to({ url: '/app', method: 'POST'},
                     (req,res,next) => {
                         res.send("Flicker");
                     }
                 );
-                app.use(router);
+                app.to(router);
                 request(app)
                 .post('/app')
                 .expect(200,"Flicker",done);
@@ -166,12 +166,12 @@ describe('Routing HTTP verbs',
                 let app = flicker();
                 app.noLog();
                 let router = app.Router();
-                router.put('/app',
+                router.to({ url: '/app', method: 'PUT'},
                     (req,res,next) => {
                         res.send("Flicker");
                     }
                 );
-                app.use(router);
+                app.to(router);
                 request(app)
                 .put('/app')
                 .expect(200,"Flicker",done);
@@ -184,12 +184,12 @@ describe('Routing HTTP verbs',
                 let app = flicker();
                 app.noLog();
                 let router = app.Router();
-                router.delete('/app',
+                router.to({ url: '/app', method: 'DELETE'},
                     (req,res,next) => {
                         res.send("Flicker");
                     }
                 );
-                app.use(router);
+                app.to(router);
                 request(app)
                 .delete('/app')
                 .expect(200,"Flicker",done);
@@ -202,12 +202,12 @@ describe('Routing HTTP verbs',
                 let app = flicker()
                 .noLog();
                 let router = app.Router();
-                router.patch('/app',
+                router.to({ url: '/app', method: 'PATCH'},
                     (req,res,next) => {
                         res.send("Flicker");
                     }
                 );
-                app.use(router);
+                app.to(router);
                 request(app)
                 .patch('/app')
                 .expect(200,"Flicker",done);
@@ -221,12 +221,12 @@ describe('Routing HTTP verbs',
                 let app = flicker()
                 .noLog();
                 let router = app.Router();
-                router.get('/pretty',
+                router.to({ url: '/pretty', method: 'GET'},
                     (req,res,next) => {
                         res.send('I am a GET Response');
                     }
                 );
-                app.use(router);
+                app.to(router);
                 request(app)
                 .post('/pretty')
                 .expect(404,done);
@@ -238,12 +238,12 @@ describe('Routing HTTP verbs',
                 let app = flicker()
                 .noLog();
                 let router = app.Router();
-                router.put('/pretty',
+                router.to({ url: '/pretty', method: 'PUT'},
                     (req,res,next) => {
                         res.send('I am a GET Response');
                     }
                 );
-                app.use(router);
+                app.to(router);
                 request(app)
                 .delete('/pretty')
                 .expect(404,done);
@@ -258,7 +258,7 @@ describe('Response Object',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use(
+                .to(
                     (req,res) => {
                         res.end("foo");
                     }
@@ -273,7 +273,7 @@ describe('Response Object',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use(
+                .to(
                     (req,res) => {
                         res.send("bar");
                     }
@@ -289,7 +289,7 @@ describe('Response Object',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use(
+                .to(
                     (req,res) => {
                         res.status(500).end("bar");
                     }
@@ -305,7 +305,7 @@ describe('Response Object',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use(
+                .to(
                     (req,res) => {
                         res.status(200).preventStatus(404).end();
                     }
@@ -320,7 +320,7 @@ describe('Response Object',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use(
+                .to(
                     (req,res) => {
                         res.json({ foo: 'bar' } );
                     }
@@ -336,7 +336,7 @@ describe('Response Object',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use('/pretty',
+                .to({ url: '/pretty', method: 'GET'},
                     (req,res,next) => {
                         res.sendFile('examples/public/test.json');
                     }
@@ -351,7 +351,7 @@ describe('Response Object',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use('/pretty',
+                .to({ url: '/pretty', method: 'GET'},
                     (req,res,next) => {
                         res.render('./test/views/index',{});
                     }
@@ -365,7 +365,7 @@ describe('Response Object',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use('/pretty',
+                .to({ url: '/pretty', method: 'GET'},
                     (req,res,next) => {
                         res.redirect('http://google.com/');
                     }
@@ -379,12 +379,13 @@ describe('Response Object',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use((req,res,next) => {
+                .to((req,res,next) => {
                     res.locals = { user: 'me' };
                     next();
                 })
-                .use('/pretty',(req,res,next) => {
-                    res.send(res.locals.user);
+                .to({ url: '/pretty', method: 'GET'},
+                    (req,res,next) => {
+                        res.send(res.locals.user);
                 });
                 request(app)
                 .get('/pretty')
@@ -400,11 +401,12 @@ describe('Request Object',
                 let app = flicker()
                 .noLog();
                 let router = app.Router();
-                app.use(bodyParser.json());
-                router.post('/pretty',(req,res,next) => {
-                    res.send(req.body.name);
+                app.to(bodyParser.json());
+                router.to({ url: '/pretty', method: 'POST'},
+                    (req,res,next) => {
+                        res.send(req.body.name);
                 });
-                app.use(router);
+                app.to(router);
                 request(app)
                 .post('/pretty')
                 .send({
@@ -418,15 +420,16 @@ describe('Request Object',
                 let app = flicker()
                 .noLog();
                 let router = app.Router();
-                app.use(cookieParser())
-                .use((req,res,next) => {
+                app.to(cookieParser())
+                .to((req,res,next) => {
                     req.cookies = {'foo':'bar'};
                     next();
                 });
-                router.get('/pretty',(req,res,next) => {
-                    res.send(req.cookies.foo);
+                router.to({ url: '/pretty', method:'GET'},
+                    (req,res,next) => {
+                        res.send(req.cookies.foo);
                 });
-                app.use(router);
+                app.to(router);
                 request(app)
                 .get('/pretty')
                 .expect(200,'bar',done);
@@ -437,11 +440,12 @@ describe('Request Object',
                 let app = flicker()
                 .noLog();
                 let router = app.Router();
-                app.use(cookieParser());
-                router.get('/pretty',(req,res,next) => {
-                    res.send(req.url);
+                app.to(cookieParser());
+                router.to({ url: '/pretty', method: 'GET'},
+                    (req,res,next) => {
+                        res.send(req.url);
                 });
-                app.use(router);
+                app.to(router);
                 request(app)
                 .get('/pretty?=df')
                 .expect(200,'/pretty?=df',done);
@@ -452,11 +456,12 @@ describe('Request Object',
                 let app = flicker()
                 .noLog();
                 let router = app.Router();
-                app.use(cookieParser());
-                router.get('/pretty',(req,res,next) => {
-                    res.send(req.path);
+                app.to(cookieParser());
+                router.to({ url: '/pretty', method: 'GET'},
+                    (req,res,next) => {
+                        res.send(req.path);
                 });
-                app.use(router);
+                app.to(router);
                 request(app)
                 .get('/pretty?=df')
                 .expect(200,'/pretty',done);
@@ -467,11 +472,12 @@ describe('Request Object',
                 let app = flicker()
                 .noLog();
                 let router = app.Router();
-                app.use(cookieParser());
-                router.put('/pretty',(req,res,next) => {
-                    res.send(req.method);
+                app.to(cookieParser());
+                router.to({ url: '/pretty', method: 'PUT'},
+                    (req,res,next) => {
+                        res.send(req.method);
                 });
-                app.use(router);
+                app.to(router);
                 request(app)
                 .put('/pretty')
                 .expect(200,'PUT',done);
@@ -482,10 +488,11 @@ describe('Request Object',
                 let app = flicker()
                 .noLog();
                 let router = app.Router();
-                router.get('/user/:id', (req,res,next) => {
-                    res.send(req.params.id);
+                router.to({ url: '/user/:id', method: 'GET'},
+                    (req,res,next) => {
+                        res.send(req.params.id);
                 });
-                app.use(router);
+                app.to(router);
                 request(app)
                 .get('/user/5')
                 .expect(200,'5',done);
@@ -496,7 +503,7 @@ describe('Request Object',
             (done) => {
                 let app = flicker()
                 .noLog()
-                .use((req,res,next) => {
+                .to((req,res,next) => {
                     res.send(req.query());
                 });
                 request(app)
@@ -513,7 +520,7 @@ describe('Serving Static content',
             (done) => {
                 let app = flicker()
                 .noLog();
-                app.use(app.serveStatic('examples/public'));
+                app.to(app.serveStatic('examples/public'));
                 request(app)
                 .get('/favicon.ico')
                 .expect(200,done);
@@ -524,7 +531,7 @@ describe('Serving Static content',
             (done) => {
                 let app = flicker()
                 .noLog();
-                app.use(app.serveStatic('examples/public'));
+                app.to(app.serveStatic('examples/public'));
                 request(app)
                 .get('/css/style.css')
                 .expect(200,done);
@@ -535,7 +542,7 @@ describe('Serving Static content',
             (done) => {
                 let app = flicker()
                 .noLog();
-                app.use(app.serveStatic('examples/public'));
+                app.to(app.serveStatic('examples/public'));
                 request(app)
                 .get('/js/index.js')
                 .expect(200,done);
@@ -546,7 +553,7 @@ describe('Serving Static content',
             (done) => {
                 let app = flicker()
                 .noLog();
-                app.use(app.serveStatic('examples/public'));
+                app.to(app.serveStatic('examples/public'));
                 request(app)
                 .get('/test.json')
                 .expect(200,done);

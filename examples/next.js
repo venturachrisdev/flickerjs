@@ -1,20 +1,20 @@
 const flicker = require('../');
 let app = flicker();
 
-app.use(
+app.to(
     (req,res,next) => {
         console.log('Atention: ');
         next();
     }
 )
-    .use(
+    .to(
         (req,res,next) => {
             console.log('You should see this');
             res.end();
         }
     )
 
-    .use(
+    .to(
         (req,res,next) => {
             console.log('but, You do not should see this');
             res.end();

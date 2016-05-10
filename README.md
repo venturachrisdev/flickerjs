@@ -26,8 +26,9 @@ Basic
 ```javascript
 const flicker = require('flickerjs');
 var app = flicker();
-app.use('/', (req, res) => {
-    res.send('Hello Flicker.js');
+app.to({ url: '/'},
+    (req, res) => {
+        res.send('Hello Flicker.js');
 })
     .listen(3000);
 
@@ -46,9 +47,9 @@ const compress = require('compression');
 
 let app = flicker();
 
-app.use(compress())
-    .use(bodyParser.json())
-    .use(bodyParser.urlencoded({ extended: true }));
+app.to(compress())
+    .to(bodyParser.json())
+    .to(bodyParser.urlencoded({ extended: true }));
 
 let api = app.Router();
 
@@ -73,48 +74,55 @@ app.locals.todos = [
     }
 ];
 
-api.get('/todos', (req,res,next) => { /* return todos */
-    res.json(app.locals.todos);
+api.to({ url:'/todos', method: 'GET'},
+    (req,res,next) => { /* return todos */
+        res.json(app.locals.todos);
 })
-    .get('/todos/:todo', (req,res,next) => { /*  return todo */
-        if(req.params.todo >= app.locals.todos.length){
-            next();
-        }
-        else{
-            res.json(app.locals.todos[req.params.todo]);
-        }
+    .to({ url: '/todos/:todo', method: 'GET'},
+        (req,res,next) => { /*  return todo */
+            if(req.params.todo >= app.locals.todos.length){
+                next();
+            }
+            else{
+                res.json(app.locals.todos[req.params.todo]);
+            }
     })
-    .post('/todos', (req,res,next) => { /*  insert todo */
-        app.locals.todos.push(req.body.todo);
-        res.json(app.locals.todos)
-    })
-    .delete('/todos/:todo', (req,res,next) => { /*  delete todo */
-        if(req.params.todo >= app.locals.todos.length){
-            next();
-        }
-        else{
-            app.locals.todos.splice(req.params.todo,1);
-            res.json(app.locals.todos);
-        }
-    })
-    .put('/todos/:todo', (req,res,next) => { /*  edit todo */
-        if(req.params.todo >= app.locals.todos.length){
-            next();
-        }
-        else{
-            app.locals.todos[req.params.todo] = req.body.todo;
+    .to({ url: '/todos', method: 'POST'},
+        (req,res,next) => { /*  insert todo */
+            app.locals.todos.push(req.body.todo);
             res.json(app.locals.todos)
-        }
+    })
+    .to({ url:'/todos/:todo', method: 'DELETE'},
+            (req,res,next) => { /*  delete todo */
+            if(req.params.todo >= app.locals.todos.length){
+                next();
+            }
+            else{
+                app.locals.todos.splice(req.params.todo,1);
+                res.json(app.locals.todos);
+            }
+    })
+    .to({ url: '/todos/:todo', method: 'PUT'},
+            (req,res,next) => { /*  edit todo */
+            if(req.params.todo >= app.locals.todos.length){
+                next();
+            }
+            else{
+                app.locals.todos[req.params.todo] = req.body.todo;
+                res.json(app.locals.todos)
+            }
     })
 
-app.use('/api',api) // include the router
-    .use('/', (req,res,next) => {
+app.to({ url: '/api'},api) // include the router
+
+    .to({ url: '/'}, (req,res,next) => {
         res.redirect("/api/todos");
     })
-    .use((req,res,next) => {
+    .to((req,res,next) => {
         res.json({}); // return a empty json
     })
     .listen(3000); /* listen */
+
 
 
 ```
@@ -136,19 +144,19 @@ let barRouter = require('./routers/bar.js'); // external router file
 app.set('template','pug')
     .set('static dir','./public')
     .set('views dir','./views')
-//app.set('env','production');
-    .use(compress())
-    .use(favicon('./public/favicon.ico'))
-    .use(app.serveStatic('./public'))
-    .use(bodyParser.json())
-    .use(bodyParser.urlencoded({ extended: true }))
-    .use(cookieParser());
+//  .to('env','production');
+    .to(compress())
+//  .to(favicon('./public/favicon.ico'))
+    .to(app.serveStatic('./public'))
+    .to(bodyParser.json())
+    .to(bodyParser.urlencoded({ extended: true }))
+    .to(cookieParser());
 
 
 // inherited in renders
 app.locals.year = 2016;
 
-app.use(
+app.to(
     (req,res,next) => {
         // inherited in renders
         res.locals.author = "Flicker.js";
@@ -157,44 +165,49 @@ app.use(
 );
 
 
-fooRouter.get('/',
+fooRouter.to({ url: '/', method: 'GET'},
     (req,res,next) => {
         res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
     }
 )
-    .get('/bar',
+    .to({ url: '/bar', method: 'GET'},
         (req,res,next) => {
            res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
         }
     );
 
-barRouter.get('/user/:id', (req,res,next) => {
-    res.send(req.params.id);
+barRouter.to({ url: '/user/:id', method: 'GET' },
+    (req,res,next) => {
+        res.send(req.params.id);
 });
 
-fooRouter.use('/bar2',barRouter);
-app.use('/foo',fooRouter)
-    .use('/bar',barRouter)
+fooRouter.to({ url: '/bar2'},barRouter);
+app.to({ url: '/foo'},fooRouter)
+    .to({ url: '/bar'},barRouter)
 
-    .use('/',(req,res,next) => {
-        res.render('index',{title: 'Welcome to Flicker.js'});
+    .to({ url: '/' },
+        (req,res,next) => {
+            res.render('index',{title: 'Welcome to Flicker.js'});
     })
 
-    .use('/test',(req,res,next) => {
-        res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+    .to({ url: '/test' },
+        (req,res,next) => {
+            res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
     })
 
-    .use('/blog',(req,res,next) => {
-        res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+    .to({ url: '/blog' },
+        (req,res,next) => {
+            res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
     })
 
-    .use('/user/:id', (req,res,next) => {
-        res.send(req.params.id);
+    .to({ url: '/user/:id' },
+        (req,res,next) => {
+            res.send(req.params.id);
     })
 
 
 
-    .use(
+    .to(
         (req,res,next) => {
             var err = new Error('Not Found');
             err.status = 404;
@@ -202,7 +215,7 @@ app.use('/foo',fooRouter)
         }
     )
 
-    .use(
+    .to(
         (req,res,next,err) => {
             if(app.get('env') == 'production'){
                 err.stack = "";
@@ -211,6 +224,7 @@ app.use('/foo',fooRouter)
         }
     )
     .listen(3000);
+
 
 
 
@@ -256,20 +270,23 @@ app.locals.foo = 'bar'; /* app.locals is an object that you can use (and call) i
 ```
 Now, you can add the middlewares you want
 ```javascript
-app.use(compress()) /* data compress*/
-.use(favicon('./public/favicon.ico')) /* serve favicon and cache it*/
-.use(app.serveStatic('./public')) /* serve static content */
-.use(bodyParser.json()) /* data parser to req.body */
-.use(bodyParser.urlencoded({ extended: true })) /* same above */
-.use(cookieParser()) /* cookies parser to req.cookies */
+app.to(compress()) /* data compress*/
+    .to(favicon('./public/favicon.ico')) /* serve favicon and cache it*/
+    .to(app.serveStatic('./public')) /* serve static content */
+    .to(bodyParser.json()) /* data parser to req.body */
+    .to(bodyParser.urlencoded({ extended: true })) /* same above */
+    .to(cookieParser()) /* cookies parser to req.cookies */
 ```
-you can set routers for a path (or all) through the use method.
+you can set routers for a path (or all)  and a method through the 'app.to' method.
+
 'req': Request,
+
 'res': Response,
+
 'next': Next middleware to call.
 
 ```javascript
-app.use(
+app.to(
     (req,res,next) => {
         res.render("index",{ title: 'My Title Page'});
     }
@@ -294,15 +311,15 @@ Its a handler for your paths. You can to nest routers on the app.
 ```javascript
 let router = app.Router();
 
-router.get('/path',(req,res,next) => { /* anything */})
-    .post('/path',(req,res,next) => { /* anything */})
-    .put('/path',(req,res,next) => { /* anything */})
-    .delete('/path',(req,res,next) => { /* anything */})
-    .put('/path',(req,res,next) => { /* anything */})
-    .use('/user/:id', (req,res,next) => { /* req.params.id */});
+router.to({ url: '/path', method: 'GET' },(req,res,next) => { /* anything */})
+    .to({ url: '/path', method: 'POST' },(req,res,next) => { /* anything */})
+    .to({ url: '/path', method: 'PUT' },(req,res,next) => { /* anything */})
+    .to({ url: '/path', method: 'DELETE'},(req,res,next) => { /* anything */})
+    .to({ url: '/path', method: 'PUT'},(req,res,next) => { /* anything */})
+    .to({ url: '/user/:id'}, (req,res,next) => { /* req.params.id */});
 
 /* incorpore to your app */
-app.use('/foo',router);
+app.to({ url: '/foo'},router);
 ```
 
 License
