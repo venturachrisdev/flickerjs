@@ -88,7 +88,7 @@ app.to({ url: '/foo'},fooRouter)
             if(app.get('env') == 'production'){
                 err.stack = "";
             }
-            res.status(err.status || 500).render("err",{ title: 'Error', error: err});
+            res.status(err.status || 500).render("err",{ title: err.message, error: err});
         }
     )
     .listen(3000, () => {
