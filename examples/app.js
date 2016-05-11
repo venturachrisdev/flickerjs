@@ -3,6 +3,7 @@ const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compress = require('compression');
+const logger = require('morgan');
 let app = flicker();
 let fooRouter = app.Router();
 let barRouter = require('./routers/bar.js'); // external router file
@@ -12,6 +13,7 @@ app.set('template','pug')
     .set('views dir','./views')
 //  .to('env','production');
     .to(compress())
+    .to(logger('dev'))
 //  .to(favicon('./public/favicon.ico'))
     .to(app.serveStatic('./public'))
     .to(bodyParser.json())
@@ -89,4 +91,6 @@ app.to({ url: '/foo'},fooRouter)
             res.status(err.status || 500).render("err",{ title: 'Error', error: err});
         }
     )
-    .listen(3000);
+    .listen(3000, () => {
+        console.log('Running...');
+    });

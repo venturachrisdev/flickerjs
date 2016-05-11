@@ -1,12 +1,13 @@
 const flicker = require('../');
 const bodyParser = require('body-parser');
 const compress = require('compression');
-
+const logger = require('morgan');
 let app = flicker();
 
 app.to(compress())
     .to(bodyParser.json())
-    .to(bodyParser.urlencoded({ extended: true }));
+    .to(bodyParser.urlencoded({ extended: true }))
+    .to(logger('dev'));
 
 let api = app.Router();
 

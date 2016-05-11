@@ -1,6 +1,6 @@
 {
   "name": "flickerjs",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A Super fast and simple web framework for node.js (v6.0.0) based on connect.",
   "main": "index.js",
   "scripts": {
@@ -37,6 +37,7 @@
     "compression": "^1.6.1",
     "consolidate": "^0.14.1",
     "cookie-parser": "^1.4.1",
+    "morgan": "^1.7.0",
     "flicker-easy": "latest",
     "pug": "latest"
   },
