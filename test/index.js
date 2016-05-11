@@ -17,7 +17,7 @@ describe('App',
 
         it('get and set',
             (done) => {
-                let app = flicker();
+                let app = flicker()
                 .to((req,res,next) => {
                     app.set('foo','bar');
                     next();
