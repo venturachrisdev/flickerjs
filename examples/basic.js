@@ -13,16 +13,6 @@ app
                 res.locals.author = "Flicker.js";
                 res.render('index',{title: 'Welcome to Flicker.js'});
             }
-        /*
-        handler: [
-            (req,res,next) => {
-                next();
-            },
-            (req,res,next) => {
-                res.render('index',{title: 'Welcome to Flicker.js'});
-            }
-        ]
-        */
     })
     .add({
         url: '/user/:id',
