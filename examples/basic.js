@@ -9,10 +9,15 @@ app
     .add({
         url: '/',
         method: 'GET',
-        handler: (req,res,next) => {
-                res.locals.author = "Flicker.js";
+        handler: [
+            (req,res,next) => {
+                app.locals.author = "Flicker.js 2";
+                next();
+            },
+            (req,res,next) => {
                 res.render('index',{title: 'Welcome to Flicker.js'});
             }
+        ]
     })
     .add({
         url: '/user/:id',

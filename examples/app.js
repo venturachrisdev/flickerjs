@@ -101,22 +101,21 @@ app
 
 
 
-    .add(
-        (req,res,next) => {
-            var err = new Error('Not Found');
-            err.status = 404;
-            next(err);
-        }
-    )
-
-    .add(
-        (req,res,next,err) => {
-            if(app.get('env') == 'production'){
-                err.stack = "";
+    .add({
+        handler:[
+            (req,res,next) => {
+                var err = new Error('Not Found');
+                err.status = 404;
+                next(err);
+            },
+            (req,res,next,err) => {
+                if(app.get('env') == 'production'){
+                    err.stack = "";
+                }
+                res.status(err.status || 500).render("err",{ title: err.message, error: err});
             }
-            res.status(err.status || 500).render("err",{ title: err.message, error: err});
-        }
-    )
+        ]
+    })
     .listen(3000, () => {
         console.log('Running...');
     });
