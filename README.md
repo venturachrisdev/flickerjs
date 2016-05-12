@@ -2,6 +2,7 @@ Flicker.js [![Build Status](https://travis-ci.org/flickerstudio/flickerjs.svg?br
 ====
 A Super fast and simple web framework for node.js (v6.0.0 ES6) based on connect.
 
+[![logo](/assets/flickerjs.png)](https://www.npmjs.com/package/flickerjs)
 
 Install
 ====
@@ -26,10 +27,13 @@ Basic
 ```javascript
 const flicker = require('flickerjs');
 var app = flicker();
-app.to({ url: '/'},
-    (req, res) => {
+app
+    .add({
+    url: '/',
+    handler: (req, res) => {
         res.send('Hello Flicker.js');
-})
+        }
+    })
     .listen(3000);
 
 ```
@@ -44,56 +48,58 @@ Simple REST API
 const flicker = require('flickerjs');
 const bodyParser = require('body-parser');
 const compress = require('compression');
-
+const logger = require('morgan');
 let app = flicker();
 
-app.to(compress())
-    .to(bodyParser.json())
-    .to(bodyParser.urlencoded({ extended: true }));
+app
+    .add(compress())
+    .add(bodyParser.json())
+    .add(bodyParser.urlencoded({ extended: true }))
+    .add(logger('dev'));
 
 let api = app.Router();
 
 app.locals.todos = [
-    {
-        description: "Lorem 0"
-    },
-    {
-        description: "Lorem 1"
-    },
-    {
-        description: "Lorem 2"
-    },
-    {
-        description: "Lorem 3"
-    },
-    {
-        description: "Lorem 4"
-    },
-    {
-        description: "Lorem 5"
-    }
+    { description: "Lorem 0" },
+    { description: "Lorem 1" },
+    { description: "Lorem 2" },
+    { description: "Lorem 3" },
+    { description: "Lorem 4" },
+    { description: "Lorem 5" }
 ];
 
-api.to({ url:'/todos', method: 'GET'},
-    (req,res,next) => { /* return todos */
-        res.json(app.locals.todos);
-})
-    .to({ url: '/todos/:todo', method: 'GET'},
-        (req,res,next) => { /*  return todo */
+api
+    .add({
+        url:'/todos',
+        method: 'GET',
+        handler: (req,res,next) => { /* return todos */
+            res.json(app.locals.todos);
+        }
+    })
+    .add({
+        url: '/todos/:todo',
+        method: 'GET',
+        handler: (req,res,next) => { /*  return todo */
             if(req.params.todo >= app.locals.todos.length){
                 next();
             }
             else{
                 res.json(app.locals.todos[req.params.todo]);
             }
+        }
     })
-    .to({ url: '/todos', method: 'POST'},
-        (req,res,next) => { /*  insert todo */
+    .add({
+        url: '/todos',
+        method: 'POST',
+        handler: (req,res,next) => { /*  insert todo */
             app.locals.todos.push(req.body.todo);
             res.json(app.locals.todos)
+        }
     })
-    .to({ url:'/todos/:todo', method: 'DELETE'},
-            (req,res,next) => { /*  delete todo */
+    .add({
+        url:'/todos/:todo',
+        method: 'DELETE',
+        handler: (req,res,next) => { /*  delete todo */
             if(req.params.todo >= app.locals.todos.length){
                 next();
             }
@@ -101,9 +107,12 @@ api.to({ url:'/todos', method: 'GET'},
                 app.locals.todos.splice(req.params.todo,1);
                 res.json(app.locals.todos);
             }
+        }
     })
-    .to({ url: '/todos/:todo', method: 'PUT'},
-            (req,res,next) => { /*  edit todo */
+    .add({
+        url: '/todos/:todo',
+        method: 'PUT',
+        handler: (req,res,next) => { /*  edit todo */
             if(req.params.todo >= app.locals.todos.length){
                 next();
             }
@@ -111,17 +120,25 @@ api.to({ url:'/todos', method: 'GET'},
                 app.locals.todos[req.params.todo] = req.body.todo;
                 res.json(app.locals.todos)
             }
+        }
     })
 
-app.to({ url: '/api'},api) // include the router
-
-    .to({ url: '/'}, (req,res,next) => {
-        res.redirect("/api/todos");
+app
+    .add({
+        url: '/api',
+        handler: api /* include the router */
     })
-    .to((req,res,next) => {
+    .add({
+        url: '/',
+        handler: (req,res,next) => {
+            res.redirect("/api/todos");
+        }
+    })
+    .add((req,res,next) => {
         res.json({}); // return a empty json
     })
     .listen(3000); /* listen */
+
 
 
 
@@ -137,6 +154,7 @@ const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compress = require('compression');
+const logger = require('morgan');
 let app = flicker();
 let fooRouter = app.Router();
 let barRouter = require('./routers/bar.js'); // external router file
@@ -144,86 +162,115 @@ let barRouter = require('./routers/bar.js'); // external router file
 app.set('template','pug')
     .set('static dir','./public')
     .set('views dir','./views')
-//  .to('env','production');
-    .to(compress())
-//  .to(favicon('./public/favicon.ico'))
-    .to(app.serveStatic('./public'))
-    .to(bodyParser.json())
-    .to(bodyParser.urlencoded({ extended: true }))
-    .to(cookieParser());
+//  .add('env','production');
+    .add(compress())
+    .add(logger('dev'))
+//  .add(favicon('./public/favicon.ico'))
+    .add(app.serveStatic('./public'))
+    .add(bodyParser.json())
+    .add(bodyParser.urlencoded({ extended: true }))
+    .add(cookieParser());
 
 
 // inherited in renders
 app.locals.year = 2016;
 
-app.to(
-    (req,res,next) => {
-        // inherited in renders
-        res.locals.author = "Flicker.js";
-        next();
-    }
-);
-
-
-fooRouter.to({ url: '/', method: 'GET'},
-    (req,res,next) => {
-        res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
-    }
-)
-    .to({ url: '/bar', method: 'GET'},
+app
+    .add(
         (req,res,next) => {
-           res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+            // inherited in renders
+            res.locals.author = "Flicker.js";
+            next();
         }
     );
 
-barRouter.to({ url: '/user/:id', method: 'GET' },
-    (req,res,next) => {
-        res.send(req.params.id);
-});
 
-fooRouter.to({ url: '/bar2'},barRouter);
-app.to({ url: '/foo'},fooRouter)
-    .to({ url: '/bar'},barRouter)
-
-    .to({ url: '/' },
-        (req,res,next) => {
-            res.render('index',{title: 'Welcome to Flicker.js'});
-    })
-
-    .to({ url: '/test' },
-        (req,res,next) => {
+fooRouter
+    .add({
+        url: '/',
+        method: 'GET',
+        handler: (req,res,next) => {
             res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+        }
+    })
+    .add({
+        url: '/bar',
+        method: 'GET',
+        handler: (req,res,next) => {
+           res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+        }
     })
 
-    .to({ url: '/blog' },
-        (req,res,next) => {
-            res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
-    })
-
-    .to({ url: '/user/:id' },
-        (req,res,next) => {
+barRouter
+    .add({
+        url: '/user/:id',
+        method: 'GET',
+        handler: (req,res,next) => {
             res.send(req.params.id);
+        }
+    })
+
+fooRouter
+    .add({
+        url: '/bar2',
+        handler: barRouter
+    })
+app
+    .add({
+        url: '/foo',
+        handler: fooRouter
+    })
+    .add({
+        url: '/bar',
+        handler: barRouter
+    })
+    .add({
+        url: '/',
+        handler: (req,res,next) => {
+            res.render('index',{title: 'Welcome to Flicker.js'});
+        }
+    })
+    .add({
+        url: '/test',
+        handler: (req,res,next) => {
+            res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+        }
+    })
+
+    .add({
+        url: '/blog',
+        handler: (req,res,next) => {
+            res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+        }
+    })
+    .add({
+        url: '/user/:id',
+        handler: (req,res,next) => {
+            res.send(req.params.id);
+        }
     })
 
 
 
-    .to(
-        (req,res,next) => {
-            var err = new Error('Not Found');
-            err.status = 404;
-            next(err);
-        }
-    )
-
-    .to(
-        (req,res,next,err) => {
-            if(app.get('env') == 'production'){
-                err.stack = "";
+    .add({
+        handler:[
+            (req,res,next) => {
+                var err = new Error('Not Found');
+                err.status = 404;
+                next(err);
+            },
+            (req,res,next,err) => {
+                if(app.get('env') == 'production'){
+                    err.stack = "";
+                }
+                res.status(err.status || 500).render("err",{ title: err.message, error: err});
             }
-            res.status(err.status || 500).render("err",{ title: 'Error', error: err});
-        }
-    )
-    .listen(3000);
+        ]
+    })
+    .listen(3000, () => {
+        console.log('Running...');
+    });
+
 
 
 
@@ -263,30 +310,29 @@ let app = flicker();
 
 If you want, change the default configs:
 ```javascript
-app.set('template','pug') /* view engine */
+app
+    .set('template','pug') /* view engine */
     .set('static dir','./public') /* static content directory (.css, .js, .json...)*/
     .set('views dir','./views'); /* views directory ( .pug, .haml, .html) */
 app.locals.foo = 'bar'; /* app.locals is an object that you can use (and call) it everywhere (middlewares, routers, renders...)*/
 ```
 Now, you can add the middlewares you want
 ```javascript
-app.to(compress()) /* data compress*/
-    .to(favicon('./public/favicon.ico')) /* serve favicon and cache it*/
-    .to(app.serveStatic('./public')) /* serve static content */
-    .to(bodyParser.json()) /* data parser to req.body */
-    .to(bodyParser.urlencoded({ extended: true })) /* same above */
-    .to(cookieParser()) /* cookies parser to req.cookies */
+app.add(compress()) /* data compress*/
+    .add(favicon('./public/favicon.ico')) /* serve favicon and cache it*/
+    .add(app.serveStatic('./public')) /* serve static content */
+    .add(bodyParser.json()) /* data parser to req.body */
+    .add(bodyParser.urlencoded({ extended: true })) /* same above */
+    .add(cookieParser()) /* cookies parser to req.cookies */
 ```
 you can set routers for a path (or all)  and a method through the 'app.to' method.
 
-'req': Request,
-
-'res': Response,
-
-'next': Next middleware to call.
+req: Request.
+res: Response.
+next: Next middleware to call.
 
 ```javascript
-app.to(
+app.add(
     (req,res,next) => {
         res.render("index",{ title: 'My Title Page'});
     }
@@ -311,15 +357,43 @@ Its a handler for your paths. You can to nest routers on the app.
 ```javascript
 let router = app.Router();
 
-router.to({ url: '/path', method: 'GET' },(req,res,next) => { /* anything */})
-    .to({ url: '/path', method: 'POST' },(req,res,next) => { /* anything */})
-    .to({ url: '/path', method: 'PUT' },(req,res,next) => { /* anything */})
-    .to({ url: '/path', method: 'DELETE'},(req,res,next) => { /* anything */})
-    .to({ url: '/path', method: 'PUT'},(req,res,next) => { /* anything */})
-    .to({ url: '/user/:id'}, (req,res,next) => { /* req.params.id */});
+router
+    .add({
+        url: '/path',
+        method: 'GET',
+        handler: (req,res,next) => { /* anything */}
+    })
+    .add({
+        url: '/path',
+        method: 'POST',
+        handler: (req,res,next) => { /* anything */}
+    })
+    .add({
+        url: '/path',
+        method: 'PUT',
+        handler: (req,res,next) => { /* anything */}
+    })
+    .add({
+        url: '/path',
+        method: 'DELETE',
+        handler: (req,res,next) => { /* anything */}
+    })
+    .add({
+        url: '/path',
+        method: 'PUT',
+        handler: (req,res,next) => { /* anything */}
+    })
+    .add({
+        url: '/user/:id'},
+        handler: (req,res,next) => { /* req.params.id */}
+    })
 
 /* incorpore to your app */
-app.to({ url: '/foo'},router);
+app
+    .add({
+    url: '/foo',
+    handler: router
+    })
 ```
 
 License
