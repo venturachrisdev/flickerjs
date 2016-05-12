@@ -1,5 +1,5 @@
 [![logo](/assets/flickerjs.png)](https://www.npmjs.com/package/flickerjs)
-A Super fast and simple web framework for node.js (v6.0.0 ES6) based on connect.
+A Super fast and simple web framework for [node.js](http://nodejs.org/).
 
 [![Build Status](https://travis-ci.org/flickerstudio/flickerjs.svg?branch=master)](https://travis-ci.org/flickerstudio/flickerjs) [![Dependency Status](https://david-dm.org/flickerstudio/flickerjs.svg)](https://david-dm.org/flickerstudio/flickerjs)
 
