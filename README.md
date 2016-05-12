@@ -1,7 +1,7 @@
 [![logo](/assets/flickerjs.png)](https://www.npmjs.com/package/flickerjs)
 A Super fast and simple web framework for [node.js](http://nodejs.org/).
 
-[![Build Status](https://travis-ci.org/flickerstudio/flickerjs.svg?branch=master)](https://travis-ci.org/flickerstudio/flickerjs) [![Dependency Status](https://david-dm.org/flickerstudio/flickerjs.svg)](https://david-dm.org/flickerstudio/flickerjs)
+[![Build Status](https://travis-ci.org/flickerStudio/flickerjs.svg?branch=master)](https://travis-ci.org/flickerStudio/flickerjs) [![Dependency Status](https://david-dm.org/flickerstudio/flickerjs.svg)](https://david-dm.org/flickerstudio/flickerjs)
 
 Install
 ====
