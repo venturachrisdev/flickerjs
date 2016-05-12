@@ -11,71 +11,97 @@ let barRouter = require('./routers/bar.js'); // external router file
 app.set('template','pug')
     .set('static dir','./public')
     .set('views dir','./views')
-//  .to('env','production');
-    .to(compress())
-    .to(logger('dev'))
-//  .to(favicon('./public/favicon.ico'))
-    .to(app.serveStatic('./public'))
-    .to(bodyParser.json())
-    .to(bodyParser.urlencoded({ extended: true }))
-    .to(cookieParser());
+//  .add('env','production');
+    .add(compress())
+    .add(logger('dev'))
+//  .add(favicon('./public/favicon.ico'))
+    .add(app.serveStatic('./public'))
+    .add(bodyParser.json())
+    .add(bodyParser.urlencoded({ extended: true }))
+    .add(cookieParser());
 
 
 // inherited in renders
 app.locals.year = 2016;
 
-app.to(
-    (req,res,next) => {
-        // inherited in renders
-        res.locals.author = "Flicker.js";
-        next();
-    }
-);
-
-
-fooRouter.to({ url: '/', method: 'GET'},
-    (req,res,next) => {
-        res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
-    }
-)
-    .to({ url: '/bar', method: 'GET'},
+app
+    .add(
         (req,res,next) => {
-           res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+            // inherited in renders
+            res.locals.author = "Flicker.js";
+            next();
         }
     );
 
-barRouter.to({ url: '/user/:id', method: 'GET' },
-    (req,res,next) => {
-        res.send(req.params.id);
-});
 
-fooRouter.to({ url: '/bar2'},barRouter);
-app.to({ url: '/foo'},fooRouter)
-    .to({ url: '/bar'},barRouter)
-
-    .to({ url: '/' },
-        (req,res,next) => {
-            res.render('index',{title: 'Welcome to Flicker.js'});
-    })
-
-    .to({ url: '/test' },
-        (req,res,next) => {
+fooRouter
+    .add({
+        url: '/',
+        method: 'GET',
+        handler: (req,res,next) => {
             res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+        }
+    })
+    .add({
+        url: '/bar',
+        method: 'GET',
+        handler: (req,res,next) => {
+           res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+        }
     })
 
-    .to({ url: '/blog' },
-        (req,res,next) => {
-            res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
-    })
-
-    .to({ url: '/user/:id' },
-        (req,res,next) => {
+barRouter
+    .add({
+        url: '/user/:id',
+        method: 'GET',
+        handler: (req,res,next) => {
             res.send(req.params.id);
+        }
+    })
+
+fooRouter
+    .add({
+        url: '/bar2',
+        handler: barRouter
+    })
+app
+    .add({
+        url: '/foo',
+        handler: fooRouter
+    })
+    .add({
+        url: '/bar',
+        handler: barRouter
+    })
+    .add({
+        url: '/',
+        handler: (req,res,next) => {
+            res.render('index',{title: 'Welcome to Flicker.js'});
+        }
+    })
+    .add({
+        url: '/test',
+        handler: (req,res,next) => {
+            res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+        }
+    })
+
+    .add({
+        url: '/blog',
+        handler: (req,res,next) => {
+            res.render('index',{title: 'Welcome to Flicker.js', message: 'Hello, I`m ' + req.url});
+        }
+    })
+    .add({
+        url: '/user/:id',
+        handler: (req,res,next) => {
+            res.send(req.params.id);
+        }
     })
 
 
 
-    .to(
+    .add(
         (req,res,next) => {
             var err = new Error('Not Found');
             err.status = 404;
@@ -83,7 +109,7 @@ app.to({ url: '/foo'},fooRouter)
         }
     )
 
-    .to(
+    .add(
         (req,res,next,err) => {
             if(app.get('env') == 'production'){
                 err.stack = "";
