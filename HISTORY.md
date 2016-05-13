@@ -2,81 +2,11 @@ v2.0.1
 ====
 * Robust nested routers
 
-```javascript
-let app = flicker()
-let router1 = app.Router();
-let router2 = app.Router();
-let router3 = app.Router();
-
-router3
-    .add({
-        url: '/bar',
-        handler: (req,res,next) => {
-            res.send('Hello!');
-        }
-    });
-router2
-    .add({
-        url: '/foo',
-        handler: router3
-    });
-router1
-    .add({
-        url: '/bar',
-        handler: router2
-    });
-app
-    .add({
-        url: '/foo',
-        handler: router1
-    })
-    .listen(3000);
-```
-http://localhost:3000/foo/bar/foo/bar show 'Hello!'.
 
 v2.0.0
 ====
-* app.add also receives an array of handlers:
-
-```javascript
-app.
-    add({
-        url: '/home',
-        method: 'GET',
-        handler: [
-            (req,res,next) => {
-                res.locals.name = "foo";
-                next();
-            },
-            (req,res,next) => {
-                res.send(res.locals.name);
-            }
-        ]
-    })
-```
-
-* Rename app.to to app.add:
-
-replacing:
-```javascript
-    app.to({
-        url: '/',
-        method: 'GET'
-    }, (req,res,next) => {
-            res.send('Go!!');
-    });
-````
-with this:
-```javascript
-    app
-        .add({
-            url: '/',
-            method: 'GET',
-            handler: (req,res,next) => {
-                res.send('Go!!');
-            }
-        })
-````
+* app.add also receives an array of handlers
+* Rename app.to to app.add
 
 v1.1.0
 ====
