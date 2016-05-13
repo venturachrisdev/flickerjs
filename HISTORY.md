@@ -1,3 +1,7 @@
+2.0.3
+====
+* setting default directories with `app.set(___dirname + '/dir') `
+
 2.0.1
 ====
 * Robust nested routers

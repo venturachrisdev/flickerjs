@@ -1,7 +1,7 @@
 const flicker = require('../');
 let app = flicker();
 
-app.add(app.serveStatic('./public'));
+app.add(app.serveStatic());
 // inherited in renders
 app.locals.year = 2016;
 

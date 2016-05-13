@@ -613,7 +613,8 @@ describe('Serving Static content',
         it('OK /favicon.ico',
             (done) => {
                 let app = flicker()
-                app.add(app.serveStatic('examples/public'));
+                app.set('static dir',__dirname + '/public');
+                app.add(app.serveStatic());
                 request(app)
                 .get('/favicon.ico')
                 .expect(200,done);
@@ -623,7 +624,8 @@ describe('Serving Static content',
         it('OK /css/style.css',
             (done) => {
                 let app = flicker()
-                app.add(app.serveStatic('examples/public'));
+                app.set('static dir',__dirname + '/public');
+                app.add(app.serveStatic());
                 request(app)
                 .get('/css/style.css')
                 .expect(200,done);
@@ -633,7 +635,8 @@ describe('Serving Static content',
         it('OK /js/index.js',
             (done) => {
                 let app = flicker()
-                app.add(app.serveStatic('examples/public'));
+                app.set('static dir',__dirname + '/public');
+                app.add(app.serveStatic());
                 request(app)
                 .get('/js/index.js')
                 .expect(200,done);
@@ -643,7 +646,8 @@ describe('Serving Static content',
         it('OK /test.json',
             (done) => {
                 let app = flicker()
-                app.add(app.serveStatic('examples/public'));
+                app.set('static dir',__dirname + '/public');
+                app.add(app.serveStatic());
                 request(app)
                 .get('/test.json')
                 .expect(200,done);

@@ -1,0 +1,35 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: "Helvetica",Arial,sans-serif;
+    background-color: #E1DDD7;
+    color: #009E60;
+    font-size: 1.1rem;
+}
+h1 {
+    padding: 50px 50px 0;
+    font-size: 2.3rem;
+}
+
+p {
+    padding: 0px 60px;
+}
+
+footer {
+    padding: 60px;
+}
+
+span {
+    font-size: 0.9rem;
+    color: #818181;
+}
+pre {
+    padding: 10px 60px;
+    font-size: 1rem;
+    color: #7B7B7B;
+}
+
+h2{
+    padding-left: 60px;
+}

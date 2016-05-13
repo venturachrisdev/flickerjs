@@ -9,13 +9,13 @@ let fooRouter = app.Router();
 let barRouter = require('./routers/bar.js'); // external router file
 
 app.set('template','pug')
-    .set('static dir','./public')
-    .set('views dir','./views')
+    .set('static dir',__dirname + '/public')
+    .set('views dir',__dirname + '/views')
 //  .add('env','production');
     .add(compress())
     .add(logger('dev'))
-//  .add(favicon('./public/favicon.ico'))
-    .add(app.serveStatic('./public'))
+//  .add(favicon( __dirname + '/public/favicon.ico'))
+    .add(app.serveStatic())
     .add(bodyParser.json())
     .add(bodyParser.urlencoded({ extended: true }))
     .add(cookieParser());
