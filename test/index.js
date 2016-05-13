@@ -122,6 +122,41 @@ describe('Router delegation',
                 .expect(200,done);
             }
         );
+        it('Nested routers',
+            (done) => {
+                let app = flicker()
+                let router1 = app.Router();
+                let router2 = app.Router();
+                let router3 = app.Router();
+
+                router3
+                    .add({
+                        url: '/bar',
+                        handler: (req,res,next) => {
+                            res.send('Hello!');
+                        }
+                    });
+                router2
+                    .add({
+                        url: '/foo',
+                        handler: router3
+                    });
+                router1
+                    .add({
+                        url: '/bar',
+                        handler: router2
+                    });
+                app
+                    .add({
+                        url: '/foo',
+                        handler: router1
+                    })
+                request(app)
+                .get('/foo/bar/foo/bar')
+                .expect(200,"Hello!",done);
+
+            }
+        );
     }
 );
 
