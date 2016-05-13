@@ -131,6 +131,12 @@ describe('Router delegation',
 
                 router3
                     .add({
+                        url: '/wrong',
+                        handler: (req,res,next) => {
+                            res.send("Wrong");
+                        }
+                    })
+                    .add({
                         url: '/bar',
                         handler: (req,res,next) => {
                             res.send('Hello!');
@@ -138,15 +144,33 @@ describe('Router delegation',
                     });
                 router2
                     .add({
+                        url: '/wrong',
+                        handler: (req,res,next) => {
+                            res.send("Wrong");
+                        }
+                    })
+                    .add({
                         url: '/foo',
                         handler: router3
                     });
                 router1
                     .add({
+                        url: '/wrong',
+                        handler: (req,res,next) => {
+                            res.send("Wrong");
+                        }
+                    })
+                    .add({
                         url: '/bar',
                         handler: router2
                     });
                 app
+                    .add({
+                        url: '/wrong',
+                        handler: (req,res,next) => {
+                            res.send("Wrong");
+                        }
+                    })
                     .add({
                         url: '/foo',
                         handler: router1
