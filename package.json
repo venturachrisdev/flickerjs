@@ -39,7 +39,7 @@
     "cookie-parser": "^1.4.1",
     "morgan": "^1.7.0",
     "flicker-easy": "latest",
-    "pug": "latest"
+    "pug": "stable"
   },
   "devDependencies": {
     "chai": "^3.5.0",
