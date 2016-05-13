@@ -1,6 +1,6 @@
 {
   "name": "flickerjs",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Super fast and simple web framework for node.js (v6.0.0)",
   "main": "index.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "cookie-parser": "^1.4.1",
     "morgan": "^1.7.0",
     "flicker-easy": "latest",
-    "pug": "stable"
+    "pug": "latest"
   },
   "devDependencies": {
     "chai": "^3.5.0",
