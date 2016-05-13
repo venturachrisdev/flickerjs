@@ -324,11 +324,13 @@ app.add(compress()) /* data compress*/
     .add(bodyParser.urlencoded({ extended: true })) /* same above */
     .add(cookieParser()) /* cookies parser to req.cookies */
 ```
-you can set routers for a path (or all)  and a method through the 'app.to' method.
+you can set routers for a path (or all)  and a method through the 'app.add' method.
 
-req: Request.
-res: Response.
-next: Next middleware to call.
+| Param | Object |
+|-----|---------|
+| req | Request. |
+| res | Response. |
+| next | Next middleware to call. |
 
 ```javascript
 app.add(
@@ -383,7 +385,7 @@ router
         handler: (req,res,next) => { /* anything */}
     })
     .add({
-        url: '/user/:id'},
+        url: '/user/:id',
         handler: (req,res,next) => { /* req.params.id */}
     })
 
