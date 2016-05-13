@@ -1,7 +1,7 @@
 2.0.1
 ====
 * Robust nested routers
-
+* auto Content-Length in `res.send`
 
 2.0.0
 ====
