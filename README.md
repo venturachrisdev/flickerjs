@@ -50,6 +50,7 @@ List of example files:
 * api.js
 * app.js
 * basic.js
+* router.js
 * next.js
 
 ```
@@ -77,7 +78,7 @@ Mini Doc
 Contributors
 ====
 Thanks to:
-* [Christopher Ventura](http://github.com/chrisventjs)
+* [Christopher Ventura](http://github.com/chrisvent)
 * [Dawson Botsford](http://github.com/dawsonbotsford)
 
 License
