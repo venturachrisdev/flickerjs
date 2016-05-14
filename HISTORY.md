@@ -1,6 +1,7 @@
 2.0.4
 ====
 * [Add] views error handler
+
 2.0.3
 ====
 * setting default directories with `app.set(___dirname + '/dir') `
