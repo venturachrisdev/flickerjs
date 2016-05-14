@@ -72,6 +72,14 @@ Mini Doc
 ====
 [Flicker Quick Guide](GUIDE.md)
 
+
+
+Contributors
+====
+Thanks to:
+* [Christopher Ventura](http://github.com/chrisventjs)
+* [Dawson Botsford](http://github.com/dawsonbotsford)
+
 License
 ====
 [MIT](LICENSE)

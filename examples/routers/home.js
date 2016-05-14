@@ -17,7 +17,7 @@ router
     })
     .add({
         url: '/login',
-        method: 'POST',
+        method: 'GET',
         handler: (req,res,next) => {
             var alert = {
                 msg: 'Incorrect Username or Password',

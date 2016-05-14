@@ -13,7 +13,7 @@ router
         }
     })
     .add({
-        url: '/post/:slug',
+        url: '/:slug',
         method: 'GET',
         handler: (req,res,next) => {
             res.render('index',{title: req.params.slug});
