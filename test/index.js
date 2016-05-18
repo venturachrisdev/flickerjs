@@ -17,7 +17,7 @@ describe('App',
         );
 
         it('get and set',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add((req,res,next) => {
                     app.set('foo','bar');
@@ -32,7 +32,7 @@ describe('App',
             }
         );
         it('locals should be inherited',
-            (done) => {
+            done => {
                 let app = flicker()
                 app.locals = { blog_title: 'Lorem Ipsum'};
                 app.add((req,res,next) => {
@@ -56,7 +56,7 @@ describe('App',
 describe('Router statusCode',
     () => {
         it('should be 200',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add((req,res,next) => {
                     res.sendStatus(200);
@@ -67,7 +67,7 @@ describe('Router statusCode',
 
         });
         it('should be 404',
-            (done) => {
+            done => {
                 let app = flicker()
                 request(app)
                 .get('/')
@@ -75,7 +75,7 @@ describe('Router statusCode',
 
         });
         it('should be 201',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add(
                     (req,res) => {
@@ -88,7 +88,7 @@ describe('Router statusCode',
             }
         );
         it('should be 500',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add((req,res) => {
                     res.status(500).end();
@@ -104,7 +104,7 @@ describe('Router statusCode',
 describe('Router delegation',
     () => {
         it('include router',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router()
                 .add({
@@ -124,7 +124,7 @@ describe('Router delegation',
             }
         );
         it('Nested routers',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router1 = app.Router();
                 let router2 = app.Router();
@@ -188,7 +188,7 @@ describe('Router delegation',
 describe('Routing HTTP verbs',
     () => {
         it('middleares responses all verbs',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add(
                     (req,res,next) => {
@@ -203,7 +203,7 @@ describe('Routing HTTP verbs',
         );
 
         it('GET',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router();
                 router.add({
@@ -222,7 +222,7 @@ describe('Routing HTTP verbs',
         );
 
         it('POST',
-            (done) => {
+            done => {
                 let app = flicker();
                 let router = app.Router();
                 router.add({
@@ -241,7 +241,7 @@ describe('Routing HTTP verbs',
         );
 
         it('PUT',
-            (done) => {
+            done => {
                 let app = flicker();
                 let router = app.Router();
                 router.add({
@@ -260,7 +260,7 @@ describe('Routing HTTP verbs',
         );
 
         it('DELETE',
-            (done) => {
+            done => {
                 let app = flicker();
                 let router = app.Router();
                 router.add({
@@ -279,7 +279,7 @@ describe('Routing HTTP verbs',
         );
 
         it('PATCH',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router();
                 router.add({
@@ -299,7 +299,7 @@ describe('Routing HTTP verbs',
 
 
         it('GET do not reponses for POST method',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router();
                 router.add({
@@ -317,7 +317,7 @@ describe('Routing HTTP verbs',
         );
 
         it('PUT do not reponses for DELETE method',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router();
                 router.add({
@@ -339,7 +339,7 @@ describe('Routing HTTP verbs',
 describe('Response Object',
     () => {
         it('end()',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add(
                     (req,res) => {
@@ -353,7 +353,7 @@ describe('Response Object',
             }
         );
         it('send()',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add(
                     (req,res) => {
@@ -368,7 +368,7 @@ describe('Response Object',
         );
 
         it('status()',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add(
                     (req,res) => {
@@ -383,7 +383,7 @@ describe('Response Object',
         );
 
         it('preventStatus() do not override the current statusCode',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add(
                     (req,res) => {
@@ -397,7 +397,7 @@ describe('Response Object',
             }
         );
         it('json()',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add(
                     (req,res) => {
@@ -412,7 +412,7 @@ describe('Response Object',
         );
 
         it('sendFile()',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add({
                     url: '/pretty',
@@ -428,7 +428,7 @@ describe('Response Object',
         );
 
         it('render()',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add({
                     url: '/pretty',
@@ -443,7 +443,7 @@ describe('Response Object',
             }
         );
         it('redirect()',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add({
                     url: '/pretty',
@@ -458,7 +458,7 @@ describe('Response Object',
             }
         );
         it('locals should be inherited',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add((req,res,next) => {
                     res.locals = { user: 'me' };
@@ -481,7 +481,7 @@ describe('Response Object',
 describe('Request Object',
     () => {
         it('body should be inherited',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router();
                 app.add(bodyParser.json());
@@ -502,7 +502,7 @@ describe('Request Object',
         });
 
         it('cookies should be inherited',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router();
                 app.add(cookieParser())
@@ -524,7 +524,7 @@ describe('Request Object',
         });
 
         it('Url',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router();
                 app.add(cookieParser());
@@ -541,8 +541,24 @@ describe('Request Object',
                 .expect(200,'/pretty?=df',done);
         });
 
+        it('url case insensitive',
+            done => {
+                let app = flicker();
+                app
+                    .add({
+                        url: '/foo',
+                        method: 'GET',
+                        handler: (req, res, next) => {
+                            res.send("Hello!");
+                        }
+                    })
+                request(app)
+                .get('/FOO')
+                .expect(200,'Hello!',done);
+            }
+        );
         it('Path',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router();
                 app.add(cookieParser());
@@ -560,7 +576,7 @@ describe('Request Object',
         });
 
         it('Method',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router();
                 app.add(cookieParser());
@@ -578,7 +594,7 @@ describe('Request Object',
         });
 
         it('Params',
-            (done) => {
+            done => {
                 let app = flicker()
                 let router = app.Router();
                 router.add({
@@ -596,7 +612,7 @@ describe('Request Object',
         );
 
         it('Query',
-            (done) => {
+            done => {
                 let app = flicker()
                 .add((req,res,next) => {
                     res.send(req.query());
@@ -612,7 +628,7 @@ describe('Request Object',
 describe('Serving Static content',
     () => {
         it('OK /favicon.ico',
-            (done) => {
+            done => {
                 let app = flicker()
                 app.set('static dir',__dirname + '/public');
                 app.add(app.serveStatic());
@@ -623,7 +639,7 @@ describe('Serving Static content',
         );
 
         it('OK /css/style.css',
-            (done) => {
+            done => {
                 let app = flicker()
                 app.set('static dir',__dirname + '/public');
                 app.add(app.serveStatic());
@@ -634,7 +650,7 @@ describe('Serving Static content',
         );
 
         it('OK /js/index.js',
-            (done) => {
+            done => {
                 let app = flicker()
                 app.set('static dir',__dirname + '/public');
                 app.add(app.serveStatic());
@@ -645,7 +661,7 @@ describe('Serving Static content',
         );
 
         it('OK /test.json',
-            (done) => {
+            done => {
                 let app = flicker()
                 app.set('static dir',__dirname + '/public');
                 app.add(app.serveStatic());
