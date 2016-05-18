@@ -23,6 +23,9 @@ $ npm install flickerjs
 
 Usage
 ====
+
+###[Documentacion del proyecto en español](https://github.com/flickerapps/flickerjs)
+
 via [flicker-easy](https://www.npmjs.com/package/flicker-easy) package.
 Generating the app:
 ```
